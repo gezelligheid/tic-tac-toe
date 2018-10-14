@@ -21,7 +21,11 @@ public class TTT{
     String[] board = {"[ ] [ ] [ ]","[ ] [ ] [ ]","[ ] [ ] [ ]"};
     // showBoard(board);
     boolean gameOver = false;
+    int round = 1;
+    String currentPlayer = p1;
     while (!gameOver){
+      showBoard(board);
+      currentPlayer = (round % 2 == 0) ? p1 : p2;
       System.out.print("horizontal move 1-3:");
       int h = in.nextInt();
       System.out.println();
@@ -29,10 +33,11 @@ public class TTT{
       int v = in.nextInt();
       System.out.println();
       if(isLegal(board,h,v)){
+        executeMove(board, h, v, currentPlayer);
+        round++;
+      }else System.out.println("ilegal move, please reevaluate it");
 
-      };
-
-
+      
       }
     showBoard(board);
   }
@@ -42,18 +47,19 @@ public class TTT{
     }
   }
   public static boolean isLegal(String[] board, int h, int v){
+    // checks if move is on board
     if (h>3 || h<1 || v>3 || v<1) {
       return false;
     }
     int sI = 1+(v-1)*4;
+    // checks if square at string index is filled
     return (board[h-1].substring(sI,sI+1).equals(" "));
   }
-  public static void executeMove(String[] board, int h, int v){
+  public static void executeMove(String[] board, int h, int v, String player){
     int sI = 1+(v-1)*4;
+    board[h-1] = board[h-1].substring(0,sI) + player + board[h-1].substring(sI + 1, board[1].length());
   }
-  // public static boolean squareEmpty(String[] board, int h, int v){
-  //   return (board[h-1].substring(1+(v-1)*3).equals(" "));
-  //   }
+
 
 
 
