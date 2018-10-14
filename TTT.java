@@ -25,19 +25,27 @@ public class TTT{
     String currentPlayer = p1;
     while (!gameOver){
       showBoard(board);
+      // determine player by round
       currentPlayer = (round % 2 == 0) ? p1 : p2;
+      // ask player for move
       System.out.print("horizontal move 1-3:");
       int h = in.nextInt();
       System.out.println();
       System.out.print("vertical move 1-3:");
       int v = in.nextInt();
       System.out.println();
+
       if(isLegal(board,h,v)){
         executeMove(board, h, v, currentPlayer);
+        if (checkWinner(board, currentPlayer)) break;
         round++;
+        if (round == 10) {
+          System.out.println("game ended in tie");
+          break;
+        }
       }else System.out.println("ilegal move, please reevaluate it");
 
-      
+
       }
     showBoard(board);
   }
@@ -51,15 +59,39 @@ public class TTT{
     if (h>3 || h<1 || v>3 || v<1) {
       return false;
     }
-    int sI = 1+(v-1)*4;
+    int sI = 1+(h-1)*4;
     // checks if square at string index is filled
-    return (board[h-1].substring(sI,sI+1).equals(" "));
+    return (board[v-1].substring(sI,sI+1).equals(" "));
   }
   public static void executeMove(String[] board, int h, int v, String player){
-    int sI = 1+(v-1)*4;
-    board[h-1] = board[h-1].substring(0,sI) + player + board[h-1].substring(sI + 1, board[1].length());
+    int sI = 1+(h-1)*4;
+    board[v-1] = board[v-1].substring(0,sI) + player + board[v-1].substring(sI + 1, board[1].length());
   }
+  public static boolean checkWinner(String[] board, String currentPlayer){
+    String winMessage = "player " + currentPlayer + " wins!";
+    // check diagonal
+    if ((Character.isLetter(board[1].charAt(5))) && ((board[0].charAt(1) == board[1].charAt(5) && board[1].charAt(5) == board[2].charAt(9))||
+        (board[2].charAt(1) == board[1].charAt(5) && board[1].charAt(5) == board[0].charAt(9)))) {
+          System.out.println(winMessage);
+          return true;
+    }
+    // check horizontal
+    for (int i = 0; i < board.length; i++) {
+      if (Character.isLetter(board[i].charAt(1)) &&
+          (board[i].charAt(1) == board[i].charAt(5) && board[i].charAt(5) == board[i].charAt(9))) {
+            System.out.println(winMessage);
+            return true;
+      }
+      if (Character.isLetter(board[0].charAt(1 + 4*i)) &&
+          (board[0].charAt(1 + 4*i) == board[1].charAt(1 + 4*i) &&
+          board[1].charAt(1 + 4*i) == board[2].charAt(1 + 4*i))) {
+            System.out.println(winMessage);
+            return true;
+      }
+    }
 
+    return false;
+  }
 
 
 
